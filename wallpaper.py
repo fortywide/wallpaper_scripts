@@ -11,11 +11,15 @@ screen_height = root.winfo_screenheight()
 relative_path = "~/Pictures/wallpapers/"
 wallpaper_folder = Path(relative_path).expanduser()
 
-for i in os.listdir(wallpaper_folder):
-    if os.path.isdir(wallpaper_folder / i):
-        continue
-    with Image.open(wallpaper_folder / i) as img:
+files = [path for path in wallpaper_folder.rglob('*') if path.is_file()]
+
+for i in files:
+    with Image.open(i) as img:
         width, height = img.size
-        print(width, height, wallpaper_folder / i)
+        print(width, height, i)
         if width < screen_width or height < screen_height:
-            os.remove(wallpaper_folder / i)
+            os.remove(i)
+            continue
+        if i.suffix != '.png':
+            img.save(i.parent / (i.stem + '.png'))
+            os.remove(i)
