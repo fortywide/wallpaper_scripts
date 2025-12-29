@@ -1,11 +1,21 @@
 from PIL import Image
+import tkinter as tk
 import os
+from pathlib import Path
 
-for i in os.listdir("/home/fortywide/Pictures/wallpapers/"):
-    if os.path.isdir("/home/fortywide/Pictures/wallpapers/" + i):
+root = tk.Tk()
+root.withdraw() 
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+
+relative_path = "~/Pictures/wallpapers/"
+wallpaper_folder = Path(relative_path).expanduser()
+
+for i in os.listdir(wallpaper_folder):
+    if os.path.isdir(wallpaper_folder / i):
         continue
-    with Image.open("/home/fortywide/Pictures/wallpapers/" + i) as img:
+    with Image.open(wallpaper_folder / i) as img:
         width, height = img.size
-        print(width, height)
-        if width < 3456 or height < 2160:
-            os.remove("/home/fortywide/Pictures/wallpapers/" + i)
+        print(width, height, wallpaper_folder / i)
+        if width < screen_width or height < screen_height:
+            os.remove(wallpaper_folder / i)
